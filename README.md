@@ -4,6 +4,8 @@ This is a containerized three-tier ticketing system for a help-desk. Users open 
 Apache passes API and health requests back to a Flask application, and Flask reads and writes ticket records to a MariaDB database. The stack is defined entirely in Docker Compose, so the whole application can be built with a single command.
 
 # Prerequisites
+This application was made to be used in an Ubuntu Noble 24.04 (LTS) virtual machine. This is one of the four Ubuntu versions Docker Engine can be installed on.
+
 The following must be installed on the VM before bringing the stack up:
  
 - **Docker Engine** (29.4.0 or later)
