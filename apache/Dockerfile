@@ -10,7 +10,7 @@ RUN apt-get update && \
 # The command is a2enmod, and the two modules are: proxy and proxy_http
 # Syntax: RUN a2enmod <module1> <module2>
 
-# RUN a2enmod ___________ ___________
+RUN a2enmod proxy proxy_http
 
 # Copy our virtual host config into Apache's sites-available directory,
 # then enable it and disable the default placeholder site.
@@ -30,4 +30,4 @@ EXPOSE 80
 # The command to start Apache is: apache2ctl
 # Syntax: CMD ["command", "flag-name", "flag-value"]
 
-# CMD ["___________", "___________", "___________"]
+CMD ["apache2ctl", "-D", "FOREGROUND"]
