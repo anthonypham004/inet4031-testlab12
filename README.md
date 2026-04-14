@@ -48,7 +48,17 @@ Follow these steps for getting and setting up a fresh clone of the repository:
    docker compose up --build
    ```
  
-   Docker will build the Flask app and Apache web images, pull the MariaDB image, initialize the database with data from `init.sql`, and start all services. The `app` container waits for `db` to pass its health check before starting, and `web` waits for `app` to pass its health check before starting. The full stake may take around 30 seconds before it's fully ready.
+   Docker will build the Flask app and Apache web images, pull the MariaDB image, initialize the database with data from `init.sql`, and start all services. The `app` container waits for `db` to pass its health check before starting, and `web` waits for `app` to pass its health check before starting. The full stack may take around 30 seconds before it's fully ready.
+
+   If you get an error along the lines of
+   ```bash
+   failed to bind host port 0.0.0.0:80/tcp: address already in use
+   ```
+   you must've had Apache2 using port 80 already, perhaps from a previous lab. To fix this, disable Apache2 using
+   ```bash
+   sudo systemctl stop apache2
+   ```
+   and try building again.
  
 4. **Check container status** from a separate terminal to confirm all three are running and healthy. The `db` and `app` containers should come up as `healthy`, and the `web` container should come up as `running`. If this isn't the case after a few minutes, something may have went wrong and will need troubleshooting.
  
@@ -58,34 +68,34 @@ Follow these steps for getting and setting up a fresh clone of the repository:
  
 5. **Open the application** with a browser at `http://<your-IP>:80`. You should see a green "API healthy" indicator and a ticket board populated with sample tickets. You can check the health statuses through the shell:
 
-```bash
-curl http://localhost:80/
-```
-Confirm you get an HTML response.
+   ```bash
+   curl http://localhost:80/
+   ```
+   Confirm you get an HTML response.
 
-```bash
-curl http://localhost:80/health
-```
-`{"database": "connected","status": "healthy"}` indicates Flask is healthy.
+   ```bash
+   curl http://localhost:80/health
+   ```
+   `{"database": "connected","status": "healthy"}` indicates Flask is healthy.
 
 6. **Verify the system works** by adding your own tickets from the browser or through the shell:
-```shell
-curl -X POST http://localhost:80/api/tickets \
-  -H "Content-Type: application/json" \
-  -d '{"title": "My first ticket", "description": "Testing the API"}'
-```
+   ```shell
+   curl -X POST http://localhost:80/api/tickets \
+   -H "Content-Type: application/json" \
+   -d '{"title": "My first ticket", "description": "Testing the API"}'
+   ```
 
-To stop and remove the containers while preserving the database volume, run:
- 
-```bash
-docker compose down
-```
- 
-To *also* delete the database volume and start completely fresh, run:
- 
-```bash
-docker compose down -v
-```
+   To stop and remove the containers while preserving the database volume, run:
+   
+   ```bash
+   docker compose down
+   ```
+   
+   To *also* delete the database volume and start completely fresh, run:
+   
+   ```bash
+   docker compose down -v
+   ```
 
 # Configuration
 
@@ -116,10 +126,10 @@ chmod +x check-lab.sh
  
 The script runs nine checks, printing `[PASS]` or `[FAIL]` for each:
  
-1. **Container health** — confirms `db` and `app` are `healthy` and `web` is running.
+1. **Container health** — confirms `db` and `app` are `healthy` and `web` is running (3 checks total).
 2. **Apache on port 80** — confirms Apache responds to an HTTP request on port 80.
 3. **Flask health endpoint** — confirms `GET /health` returns `{"status": "healthy"}`, proving Flask can reach MariaDB.
-4. **API functionality** — confirms `GET /api/tickets` returns a JSON array and `POST /api/tickets` successfully creates a new ticket.
+4. **API functionality** — confirms `GET /api/tickets` returns a JSON array and `POST /api/tickets` successfully creates a new ticket (2 checks total).
 5. **Named volume** — confirms the named volume exists for MariaDB.
 6. **Named network** — confirms the `app-network` bridge network exists.
  
