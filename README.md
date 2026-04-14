@@ -32,7 +32,7 @@ Follow these steps for getting and setting up a fresh clone of the repository:
 1. **Clone the repository and enter the project directory.**
  
    ```bash
-   git clone <repo-url-TO-BE-FILLED>
+   git clone https://github.com/anthonypham004/inet4031-testlab12.git
    cd inet4031-testlab12
    ```
  
